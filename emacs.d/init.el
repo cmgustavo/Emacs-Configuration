@@ -385,7 +385,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Smart tabs (Autocomplete with TAB)
 (require 'smart-tab)
-;(global-smart-tab-mode 1)
+(global-smart-tab-mode 1)
 (define-key read-expression-map [(tab)] 'hippie-expand)
 (defun hippie-unexpand ()
   (interactive)
