@@ -4,6 +4,75 @@
 ;; Packages
 (add-to-list 'load-path "~/.emacs.d/packages")
 
+(add-to-list 'load-path "~/.emacs.d/emms/lisp/")
+;(require 'emms-setup)
+;(emms-standard)
+;(emms-default-players)
+;(emms-player-for '(*track* (type . file) (name . "foo.mp3")))
+;(executable-find "afplay")
+
+;(setq exec-path (append exec-path '("/usr/local/bin")))
+;; (require 'emms-setup)
+;; (require 'emms-player-mplayer)
+;; (emms-standard)
+;; (emms-default-players)
+;; (define-emms-simple-player mplayer '(file url)
+;;       (regexp-opt '(".ogg" ".mp3" ".wav" ".mpg" ".mpeg" ".wmv" ".wma"
+;;                     ".mov" ".avi" ".divx" ".ogm" ".asf" ".mkv" "http://" "mms://"
+;;                     ".rm" ".rmvb" ".mp4" ".flac" ".vob" ".m4a" ".flv" ".ogv" ".pls"))
+;;       "afplay" "-slave" "-quiet" "-really-quiet" "-fullscreen")
+
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/emms/lisp"))
+
+(require 'emms-setup)
+;(emms-standard)
+;(emms-devel)
+(require 'emms-player-mplayer)
+(emms-standard)
+(emms-default-players)
+
+(setq emms-source-file-default-directory "~/Music/")
+
+(define-emms-simple-player mplayer-mp3 '(file url)
+  "\\.[mM][pP][23]$" "afplay")
+
+(define-emms-simple-player mplayer-ogg '(file)
+  (regexp-opt '(".ogg" ".OGG" ".FLAC" ".flac" )) "mplayer")
+
+(define-emms-simple-player mplayer-playlist '(streamlist)
+   "http://" "afplay" "-playlist")
+
+(define-emms-simple-player mplayer-list '(file url)
+   (regexp-opt '(".m3u" ".pls")) "afplay" "-playlist")
+
+(define-emms-simple-player mplayer-video '(file url)
+  (regexp-opt '(".ogg" ".mp3" ".wav" ".mpg" ".mpeg" ".wmv"
+                ".wma" ".mov" ".avi" ".divx" ".ogm" ".asf"
+                ".mkv" "http://")) "afplay")
+
+(setq emms-player-list '(emms-player-mplayer-mp3
+                         emms-player-mplayer-ogg
+                         emms-player-mplayer-playlist
+                         emms-player-mplayer-video
+                         emms-player-mplayer-list
+                         ))
+
+(setq emms-playlist-buffer-name "*EMMS*")
+
+(setq emms-info-asynchronously t)
+
+(setq emms-stream-default-action "play")
+
+(defun emms-add-universe-synchronously ()
+  (interactive)
+  (let ((emms-info-asynchronously nil))
+    (emms-add-directory-tree emms-source-file-default-directory)
+     (message "Thud!")))
+
+;debug players
+; (emms-player-for '(*track* (type . file)
+;                           (name . "myfile.pls")))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Backup NONE
 
@@ -100,8 +169,6 @@
 (setq auto-mode-alist (cons '("bb$" . sql-mode) auto-mode-alist))
 ;; La tecla 'Supr' borra la parte seleccionada
 (pending-delete-mode 1)
-;; Remarca la zona seleccionada
-(transient-mark-mode +1)
 ;; Abre archivos comprimidos con gzip y bzip2
 (auto-compression-mode 1)
 ;; Algunas combinaciones de teclas
@@ -124,13 +191,11 @@
 ;; Mostrar los bloques marcados mientras los estamos marcando
 (setq transient-mark-mode t)
 ; Hacer scroll por 10 lineas              
-(setq scroll-step 10)
+(setq scroll-step 15)
 ;; No seguir agregando lineas en blanco al final
 (setq next-line-add-newlines nil)
 ;; Agregar automaticamente fin de linea a los archivos
 (setq require-final-newline t)
-;; El modo default para archivos nuevos es text-mode         
-(setq default-major-mode 'tex-mode)
 ; Recordamos nuestra posicion en el buffer               
 (setq save-place t)
 ;; Acepta 'y' o 'n' cuando pide 'yes' o 'no'
@@ -140,15 +205,15 @@
 ;; Indenta por default en 4 tabs/espacios 
 (setq standard-indent 4)
 ;; Deshabilita los tab para indent
-(setq-default indent-tabs-mode nil)
+;(setq-default indent-tabs-mode nil)
 ;; Autocompletado de filas      
 (setq auto-fill-mode 1)
 ;; Muestra el numero de linea               
 (line-number-mode 1)
 
 (autoload 'tt-mode "tt-mode")
-(setq auto-mode-alist
-      (append '(("\\.tt$" . tt-mode))  auto-mode-alist ))
+;(setq auto-mode-alist
+;      (append '(("\\.tt$" . tt-mode))  auto-mode-alist ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Multi web mode
@@ -164,18 +229,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Emacs Development Tools
-(load-file "~/.emacs.d/cedet/common/cedet.el")
-(global-ede-mode 1)                      ; Enable the Project management system
-(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
-(global-srecode-minor-mode 1)            ; Enable template insertion menu
+;(load-file "~/.emacs.d/cedet/common/cedet.el")
+;(global-ede-mode 1)                      ; Enable the Project management system
+;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
+;(global-srecode-minor-mode 1)            ; Enable template insertion menu
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BEST PERL MODE
 (add-to-list 'load-path "~/.emacs.d/pde")
 (load "pde-load")
 
-;; (ido-mode 1)
-;; (require 'template-simple)
+;(ido-mode 1)
+;(require 'template-simple)
 
 ;(load-file "~/.emacs.d/packages/ffap.el")
 ;(require 'ffap)
@@ -246,7 +311,7 @@
 ;; (global-set-key (kbd "C-c v") 'imenu-tree)
 ;; ;;(global-set-key (kbd "C-c j") 'ffap)
 
-(setq tags-table-list '("~/TAGS"))
+;(setq tags-table-list '("~/TAGS"))
 ;; (autoload 'imenu-tree "imenu-tree" "Show imenu tree" t)
 ;; (setq imenu-tree-auto-update t)
 ;; (eval-after-load "imenu"
@@ -322,9 +387,9 @@
 (require 'smart-tab)
 ;(global-smart-tab-mode 1)
 (define-key read-expression-map [(tab)] 'hippie-expand)
-;(defun hippie-unexpand ()
-;  (interactive)
-;  (hippie-expand 0))
+(defun hippie-unexpand ()
+  (interactive)
+  (hippie-expand 0))
 (define-key read-expression-map [(shift tab)] 'hippie-unexpand)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
