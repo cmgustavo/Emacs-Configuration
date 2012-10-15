@@ -4,75 +4,6 @@
 ;; Packages
 (add-to-list 'load-path "~/.emacs.d/packages")
 
-(add-to-list 'load-path "~/.emacs.d/emms/lisp/")
-;(require 'emms-setup)
-;(emms-standard)
-;(emms-default-players)
-;(emms-player-for '(*track* (type . file) (name . "foo.mp3")))
-;(executable-find "afplay")
-
-;(setq exec-path (append exec-path '("/usr/local/bin")))
-;; (require 'emms-setup)
-;; (require 'emms-player-mplayer)
-;; (emms-standard)
-;; (emms-default-players)
-;; (define-emms-simple-player mplayer '(file url)
-;;       (regexp-opt '(".ogg" ".mp3" ".wav" ".mpg" ".mpeg" ".wmv" ".wma"
-;;                     ".mov" ".avi" ".divx" ".ogm" ".asf" ".mkv" "http://" "mms://"
-;;                     ".rm" ".rmvb" ".mp4" ".flac" ".vob" ".m4a" ".flv" ".ogv" ".pls"))
-;;       "afplay" "-slave" "-quiet" "-really-quiet" "-fullscreen")
-
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/emms/lisp"))
-
-(require 'emms-setup)
-;(emms-standard)
-;(emms-devel)
-(require 'emms-player-mplayer)
-(emms-standard)
-(emms-default-players)
-
-(setq emms-source-file-default-directory "~/Music/")
-
-(define-emms-simple-player mplayer-mp3 '(file url)
-  "\\.[mM][pP][23]$" "afplay")
-
-(define-emms-simple-player mplayer-ogg '(file)
-  (regexp-opt '(".ogg" ".OGG" ".FLAC" ".flac" )) "mplayer")
-
-(define-emms-simple-player mplayer-playlist '(streamlist)
-   "http://" "afplay" "-playlist")
-
-(define-emms-simple-player mplayer-list '(file url)
-   (regexp-opt '(".m3u" ".pls")) "afplay" "-playlist")
-
-(define-emms-simple-player mplayer-video '(file url)
-  (regexp-opt '(".ogg" ".mp3" ".wav" ".mpg" ".mpeg" ".wmv"
-                ".wma" ".mov" ".avi" ".divx" ".ogm" ".asf"
-                ".mkv" "http://")) "afplay")
-
-(setq emms-player-list '(emms-player-mplayer-mp3
-                         emms-player-mplayer-ogg
-                         emms-player-mplayer-playlist
-                         emms-player-mplayer-video
-                         emms-player-mplayer-list
-                         ))
-
-(setq emms-playlist-buffer-name "*EMMS*")
-
-(setq emms-info-asynchronously t)
-
-(setq emms-stream-default-action "play")
-
-(defun emms-add-universe-synchronously ()
-  (interactive)
-  (let ((emms-info-asynchronously nil))
-    (emms-add-directory-tree emms-source-file-default-directory)
-     (message "Thud!")))
-
-;debug players
-; (emms-player-for '(*track* (type . file)
-;                           (name . "myfile.pls")))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Backup NONE
 
@@ -174,12 +105,11 @@
 ;; Algunas combinaciones de teclas
 (global-set-key "\C-g" 'goto-line)
 
-
 ;; Entra en modo de coloreado por sintaxis
 (global-font-lock-mode t)
 ;; make it easy on eyes first ...
-(set-foreground-color "gray")
-(set-background-color "black")
+;(set-foreground-color "gray")
+;(set-background-color "black")
 
 (setq font-lock-maximum-decoration t)
 (setq font-lock-maximum-size 262144)
@@ -188,10 +118,11 @@
 (require 'paren)
 (show-paren-mode)
 (setq show-paren-mismatch t)
+
 ;; Mostrar los bloques marcados mientras los estamos marcando
 (setq transient-mark-mode t)
 ; Hacer scroll por 10 lineas              
-(setq scroll-step 15)
+(setq scroll-step 20)
 ;; No seguir agregando lineas en blanco al final
 (setq next-line-add-newlines nil)
 ;; Agregar automaticamente fin de linea a los archivos
@@ -205,7 +136,7 @@
 ;; Indenta por default en 4 tabs/espacios 
 (setq standard-indent 4)
 ;; Deshabilita los tab para indent
-;(setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
 ;; Autocompletado de filas      
 (setq auto-fill-mode 1)
 ;; Muestra el numero de linea               
@@ -241,10 +172,6 @@
 
 ;(ido-mode 1)
 ;(require 'template-simple)
-
-;(load-file "~/.emacs.d/packages/ffap.el")
-;(require 'ffap)
-;(ffap-bindings)
 
 ;; M-SPC not available, window manager take it away
 ;; (global-set-key (kbd "M-'") 'just-one-space)
@@ -402,6 +329,7 @@
 (global-set-key "\"" 'skeleton-pair-insert-maybe)
 (global-set-key "<" 'skeleton-pair-insert-maybe)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Match HTML tags
 (add-hook 'html-mode-hook
 	  (lambda ()
@@ -410,4 +338,56 @@
 	    )
 	  )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; EMMS (Music Player)
 
+(add-to-list 'load-path "~/.emacs.d/emms/lisp/")
+;(add-to-list 'load-path (expand-file-name "~/.emacs.d/emms/lisp"))
+
+(require 'emms-setup)
+(require 'emms-player-mplayer)
+(emms-standard)
+(emms-default-players)
+
+(setq emms-source-file-default-directory "~/Music/")
+(define-emms-simple-player mplayer-mp3 '(file url)
+  "\\.[mM][pP][23]$" "afplay")
+(define-emms-simple-player mplayer-ogg '(file)
+  (regexp-opt '(".ogg" ".OGG" ".FLAC" ".flac" )) "mplayer")
+(define-emms-simple-player mplayer-playlist '(streamlist)
+   "http://" "afplay" "-playlist")
+(define-emms-simple-player mplayer-list '(file url)
+   (regexp-opt '(".m3u" ".pls")) "afplay" "-playlist")
+(define-emms-simple-player mplayer-video '(file url)
+  (regexp-opt '(".ogg" ".mp3" ".wav" ".mpg" ".mpeg" ".wmv"
+                ".wma" ".mov" ".avi" ".divx" ".ogm" ".asf"
+                ".mkv" "http://")) "afplay")
+(setq emms-player-list '(emms-player-mplayer-mp3
+                         emms-player-mplayer-ogg
+                         emms-player-mplayer-playlist
+                         emms-player-mplayer-video
+                         emms-player-mplayer-list
+                         ))
+(setq emms-playlist-buffer-name "*Music*")
+(setq emms-info-asynchronously t)
+(setq emms-stream-default-action "play")
+(defun emms-add-universe-synchronously ()
+  (interactive)
+  (let ((emms-info-asynchronously nil))
+    (emms-add-directory-tree emms-source-file-default-directory)
+     (message "Thud!")))
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
+ '(custom-enabled-themes (quote (deeper-blue))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
