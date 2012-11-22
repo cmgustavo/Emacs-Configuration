@@ -201,41 +201,41 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EMMS (Music Player)
 
-(add-to-list 'load-path "~/.emacs.d/emms/lisp/")
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/emms/lisp"))
+;; (add-to-list 'load-path "~/.emacs.d/emms/lisp/")
+;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/emms/lisp"))
 
-(require 'emms-setup)
-;(require 'emms-player-mplayer)
-(emms-standard)
-(emms-default-players)
+;; (require 'emms-setup)
+;; ;(require 'emms-player-mplayer)
+;; (emms-standard)
+;; (emms-default-players)
 
-(setq emms-source-file-default-directory "~/Music/")
-(define-emms-simple-player mplayer-mp3 '(file url)
-  "\\.[mM][pP][23]$" "afplay")
-(define-emms-simple-player mplayer-ogg '(file)
-  (regexp-opt '(".ogg" ".OGG" ".FLAC" ".flac" )) "mplayer")
-(define-emms-simple-player mplayer-playlist '(streamlist)
-   "http://" "afplay" "-playlist")
-(define-emms-simple-player mplayer-list '(file url)
-   (regexp-opt '(".m3u" ".pls")) "afplay" "-playlist")
-(define-emms-simple-player mplayer-video '(file url)
-  (regexp-opt '(".ogg" ".mp3" ".wav" ".mpg" ".mpeg" ".wmv"
-                ".wma" ".mov" ".avi" ".divx" ".ogm" ".asf"
-                ".mkv" "http://")) "afplay")
-(setq emms-player-list '(emms-player-mplayer-mp3
-                         emms-player-mplayer-ogg
-                         emms-player-mplayer-playlist
-                         emms-player-mplayer-video
-                         emms-player-mplayer-list
-                         ))
-(setq emms-playlist-buffer-name "*Music*")
-(setq emms-info-asynchronously t)
-(setq emms-stream-default-action "play")
-(defun emms-add-universe-synchronously ()
-  (interactive)
-  (let ((emms-info-asynchronously nil))
-    (emms-add-directory-tree emms-source-file-default-directory)
-     (message "Thud!")))
+;; (setq emms-source-file-default-directory "~/Music/")
+;; (define-emms-simple-player mplayer-mp3 '(file url)
+;;   "\\.[mM][pP][23]$" "afplay")
+;; (define-emms-simple-player mplayer-ogg '(file)
+;;   (regexp-opt '(".ogg" ".OGG" ".FLAC" ".flac" )) "mplayer")
+;; (define-emms-simple-player mplayer-playlist '(streamlist)
+;;    "http://" "afplay" "-playlist")
+;; (define-emms-simple-player mplayer-list '(file url)
+;;    (regexp-opt '(".m3u" ".pls")) "afplay" "-playlist")
+;; (define-emms-simple-player mplayer-video '(file url)
+;;   (regexp-opt '(".ogg" ".mp3" ".wav" ".mpg" ".mpeg" ".wmv"
+;;                 ".wma" ".mov" ".avi" ".divx" ".ogm" ".asf"
+;;                 ".mkv" "http://")) "afplay")
+;; (setq emms-player-list '(emms-player-mplayer-mp3
+;;                          emms-player-mplayer-ogg
+;;                          emms-player-mplayer-playlist
+;;                          emms-player-mplayer-video
+;;                          emms-player-mplayer-list
+;;                          ))
+;; (setq emms-playlist-buffer-name "*Music*")
+;; (setq emms-info-asynchronously t)
+;; (setq emms-stream-default-action "play")
+;; (defun emms-add-universe-synchronously ()
+;;   (interactive)
+;;   (let ((emms-info-asynchronously nil))
+;;     (emms-add-directory-tree emms-source-file-default-directory)
+;;      (message "Thud!")))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
