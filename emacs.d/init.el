@@ -15,8 +15,8 @@
 ;; Generalidades
 
 ;; Dont use mouse wheel
-(setq mouse-wheel-mode nil)
-(setq mac-right-option-modifier nil)
+;(setq mouse-wheel-mode nil)
+;(setq mac-right-option-modifier nil)
 
 ;; Los archivos .bb son templates de SQL
 (setq auto-mode-alist (cons '("bb$" . sql-mode) auto-mode-alist))
@@ -47,11 +47,11 @@
 ;; Acepta 'y' o 'n' cuando pide 'yes' o 'no'
 (fset 'yes-or-no-p 'y-or-n-p)
 ;; Resalta la linea que esta el cursor
-;(global-hl-line-mode 1)
+(global-hl-line-mode 1)
 ;; Indenta por default en 4 tabs/espacios 
 (setq standard-indent 4)
 ;; Deshabilita los tab para indent
-;(setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
 ;; Autocompletado de filas      
 (setq auto-fill-mode 1)
 ;; Muestra el numero de linea               
