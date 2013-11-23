@@ -90,7 +90,7 @@
 ;; Generalidades
 
 ;; Dont use mouse wheel
-;(setq mouse-wheel-mode nil)
+(setq mouse-wheel-mode nil)
 (setq mac-right-option-modifier nil)
 
 ;; Los archivos .bb son templates de SQL
@@ -133,6 +133,8 @@
 (setq auto-fill-mode 1)
 ;; Muestra el numero de linea               
 (line-number-mode 1)
+;; No mostrar toolbar
+(tool-bar-mode -1)
 
 (autoload 'tt-mode "tt-mode")
 ;(setq auto-mode-alist
