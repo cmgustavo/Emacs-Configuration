@@ -2,6 +2,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Packages
+;(require 'package)
+;(add-to-list 'package-archives 
+;    '("marmalade" .
+;      "http://marmalade-repo.org/packages/"))
+;(package-initialize)
+
 (add-to-list 'load-path "~/.emacs.d/packages")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -93,8 +99,6 @@
 (setq mouse-wheel-mode nil)
 (setq mac-right-option-modifier nil)
 
-;; Los archivos .bb son templates de SQL
-(setq auto-mode-alist (cons '("bb$" . sql-mode) auto-mode-alist))
 ;; La tecla 'Supr' borra la parte seleccionada
 (pending-delete-mode 1)
 
@@ -124,7 +128,7 @@
 ;; Acepta 'y' o 'n' cuando pide 'yes' o 'no'
 (fset 'yes-or-no-p 'y-or-n-p)
 ;; Resalta la linea que esta el cursor
-;(global-hl-line-mode 1)
+(global-hl-line-mode 1)
 ;; Indenta por default en 4 tabs/espacios 
 (setq standard-indent 4)
 ;; Deshabilita los tab para indent
@@ -136,9 +140,13 @@
 ;; No mostrar toolbar
 (tool-bar-mode -1)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Custom files
+;; Los archivos .bb son templates de SQL
+(setq auto-mode-alist (cons '("bb$" . sql-mode) auto-mode-alist))
 (autoload 'tt-mode "tt-mode")
-;(setq auto-mode-alist
-;      (append '(("\\.tt$" . tt-mode))  auto-mode-alist ))
+(setq auto-mode-alist
+      (append '(("\\.tt$" . tt-mode))  auto-mode-alist ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Multi web mode
@@ -168,17 +176,17 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Smart tabs (Autocomplete with TAB)
-(require 'smart-tab)
+;(require 'smart-tab)
 ; comment for use autocomplete by type of file
-(global-smart-tab-mode 1)
-(define-key read-expression-map [(tab)] 'hippie-expand)
-(defun hippie-unexpand ()
-  (interactive)
-  (hippie-expand 0))
-(define-key read-expression-map [(shift tab)] 'hippie-unexpand)
+;(global-smart-tab-mode 1)
+;(define-key read-expression-map [(tab)] 'hippie-expand)
+;(defun hippie-unexpand ()
+;  (interactive)
+;  (hippie-expand 0))
+;(define-key read-expression-map [(shift tab)] 'hippie-unexpand)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Snippet (Autocomplete)
+;; Snippet (Autocomplete-code)
 (add-to-list 'load-path
              "~/.emacs.d/yasnippet")
 (require 'yasnippet)
@@ -207,6 +215,68 @@
 	    (define-key html-mode-map (kbd "<M-right>") 'sgml-skip-tag-forward)
 	    )
 	  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Auto-complete
+(add-to-list 'load-path "~/.emacs.d/auto-complete")
+                                        ; Load the default configuration
+(require 'auto-complete-config)
+                                        ; Make sure we can find the dictionaries
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/dict")
+                                        ; Use dictionaries by default
+(setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
+(global-auto-complete-mode t)
+                                        ; Start auto-completion after 2 characters of a word
+(setq ac-auto-start 2)
+                                        ; case sensitivity is important when finding matches
+(setq ac-ignore-case nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Javascript
+(add-to-list 'load-path "~/.emacs.d/lintnode")
+(require 'flymake-jslint)
+;; Make sure we can find the lintnode executable
+(setq lintnode-location "~/.emacs.d/lintnode")
+;; JSLint can be... opinionated
+(setq lintnode-jslint-excludes (list 'nomen 'undef 'plusplus 'onevar 'white))
+;; Start the server when we first open a js file and start checking
+(add-hook 'js-mode-hook
+          (lambda ()
+            (lintnode-hook)))
+
+;; Nice Flymake minibuffer messages
+(require 'flymake-cursor)
+
+(add-hook 'js-mode-hook
+          (lambda ()
+            ;; Scan the file for nested code blocks
+            (imenu-add-menubar-index)
+            ;; Activate the folding mode
+            (hs-minor-mode t)))
+
+;; Show-hide
+;(global-set-key (kbd "") 'hs-show-block)
+;(global-set-key (kbd "") 'hs-show-all)
+;(global-set-key (kbd "") 'hs-hide-block)
+;(global-set-key (kbd "") 'hs-hide-all)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; TAB key fix!
+(defun indent-or-expand (arg)
+  "Either indent according to mode, or expand the word preceding
+point."
+  (interactive "*P")
+  (if (and
+       (or (bobp) (= ?w (char-syntax (char-before))))
+       (or (eobp) (not (= ?w (char-syntax (char-after))))))
+      (dabbrev-expand arg)
+    (indent-according-to-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; AngularJS
+;(require 'angular-snippets)
+;(eval-after-load "sgml-mode"
+;  '(define-key html-mode-map (kbd "C-c C-d") 'ng-snip-show-docs-at-point))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EMMS (Music Player)
