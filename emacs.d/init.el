@@ -21,76 +21,76 @@
 ;; TABS 
 
 ;; Include tabbar
-;; (require 'tabbar)
-;; (tabbar-mode)
-;; (setq tabbar-buffer-groups-function
-;;       (lambda ()
-;;         (list "All Buffers")))
+(require 'tabbar)
+(tabbar-mode)
+(setq tabbar-buffer-groups-function
+      (lambda ()
+        (list "All Buffers")))
 
-;; (setq tabbar-buffer-list-function
-;;       (lambda ()
-;;         (remove-if
-;;          (lambda(buffer)
-;;            (find (aref (buffer-name buffer) 0) " *"))
-;;          (buffer-list))))
+(setq tabbar-buffer-list-function
+      (lambda ()
+        (remove-if
+         (lambda(buffer)
+           (find (aref (buffer-name buffer) 0) " *"))
+         (buffer-list))))
 
-;; (defun tabbar-buffer-groups (buffer)
-;;   "Return the list of group names BUFFER belongs to.
-;;  Return only one group for each buffer."
-;;   (with-current-buffer (get-buffer buffer)
-;;     (cond
-;;      ((string-equal "*" (substring (buffer-name) 0 1))
-;;       '("Emacs Buffer"))
-;;      ((eq major-mode 'dired-mode)
-;;       '("Dired"))
-;;      (t
-;;       '("User Buffer"))
-;;      )))
+(defun tabbar-buffer-groups (buffer)
+  "Return the list of group names BUFFER belongs to.
+ Return only one group for each buffer."
+  (with-current-buffer (get-buffer buffer)
+    (cond
+     ((string-equal "*" (substring (buffer-name) 0 1))
+      '("Emacs Buffer"))
+     ((eq major-mode 'dired-mode)
+      '("Dired"))
+     (t
+      '("User Buffer"))
+     )))
 
-;; ;; C-S-<tab> ;; C-S-<win>-<tab>
-;; (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-forward-tab)
-;; (global-set-key (kbd "<C-S-s-iso-lefttab>") 'tabbar-backward-tab)
-;; ;; C-x C-<left> ;; C-x C-<right>
-;; (global-set-key (kbd "C-x C-<right>") 'tabbar-forward-group)
-;; (global-set-key (kbd "C-x C-<left>") 'tabbar-backward-group)
+;; C-S-<tab> ;; C-S-<win>-<tab>
+(global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-forward-tab)
+(global-set-key (kbd "<C-S-s-iso-lefttab>") 'tabbar-backward-tab)
+;; C-x C-<left> ;; C-x C-<right>
+(global-set-key (kbd "C-x C-<right>") 'tabbar-forward-group)
+(global-set-key (kbd "C-x C-<left>") 'tabbar-backward-group)
 
-;; (dolist (func '(tabbar-mode tabbar-forward-tab tabbar-forward-group tabbar-backward-tab tabbar-backward-group))
-;;   (autoload func "tabbar" "Tabs at the top of buffers and easy control-tab navigation"))
+(dolist (func '(tabbar-mode tabbar-forward-tab tabbar-forward-group tabbar-backward-tab tabbar-backward-group))
+  (autoload func "tabbar" "Tabs at the top of buffers and easy control-tab navigation"))
 
-;; (defmacro defun-prefix-alt (name on-no-prefix on-prefix &optional do-always)
-;;   `(defun ,name (arg)
-;;      (interactive "P")
-;;      ,do-always
-;;      (if (equal nil arg)
-;;          ,on-no-prefix
-;;        ,on-prefix)))
-;; (defun-prefix-alt shk-tabbar-next (tabbar-forward-tab) (tabbar-forward-group) (tabbar-mode 1))
-;; (defun-prefix-alt shk-tabbar-prev (tabbar-backward-tab) (tabbar-backward-group) (tabbar-mode 1))
+(defmacro defun-prefix-alt (name on-no-prefix on-prefix &optional do-always)
+  `(defun ,name (arg)
+     (interactive "P")
+     ,do-always
+     (if (equal nil arg)
+         ,on-no-prefix
+       ,on-prefix)))
+(defun-prefix-alt shk-tabbar-next (tabbar-forward-tab) (tabbar-forward-group) (tabbar-mode 1))
+(defun-prefix-alt shk-tabbar-prev (tabbar-backward-tab) (tabbar-backward-group) (tabbar-mode 1))
 
-;; (global-set-key [(control tab)] 'shk-tabbar-next)
-;; (global-set-key [(control shift tab)] 'shk-tabbar-prev)
+(global-set-key [(control tab)] 'shk-tabbar-next)
+(global-set-key [(control shift tab)] 'shk-tabbar-prev)
 
-;; ;; add a buffer modification state indicator in the tab label,
-;; ;; and place a space around the label to make it looks less crowd
-;; (defadvice tabbar-buffer-tab-label (after fixup_tab_label_space_and_flag activate)
-;;   (setq ad-return-value
-;;         (if (and (buffer-modified-p (tabbar-tab-value tab))
-;;                  (buffer-file-name (tabbar-tab-value tab)))
-;;             (concat " + " (concat ad-return-value " "))
-;;           (concat " " (concat ad-return-value " ")))))
+;; add a buffer modification state indicator in the tab label,
+;; and place a space around the label to make it looks less crowd
+(defadvice tabbar-buffer-tab-label (after fixup_tab_label_space_and_flag activate)
+  (setq ad-return-value
+        (if (and (buffer-modified-p (tabbar-tab-value tab))
+                 (buffer-file-name (tabbar-tab-value tab)))
+            (concat " + " (concat ad-return-value " "))
+          (concat " " (concat ad-return-value " ")))))
 
-;; ;; called each time the modification state of the buffer changed
-;; (defun ztl-modification-state-change ()
-;;   (tabbar-set-template tabbar-current-tabset nil)
-;;   (tabbar-display-update))
-;; ;; first-change-hook is called BEFORE the change is made
-;; (defun ztl-on-buffer-modification ()
-;;   (set-buffer-modified-p t)
-;;   (ztl-modification-state-change))
-;; (add-hook 'after-save-hook 'ztl-modification-state-change)
-;; ;; this doesn't work for revert, I don't know
-;; ;;(add-hook 'after-revert-hook 'ztl-modification-state-change)
-;; (add-hook 'first-change-hook 'ztl-on-buffer-modification)
+;; called each time the modification state of the buffer changed
+(defun ztl-modification-state-change ()
+  (tabbar-set-template tabbar-current-tabset nil)
+  (tabbar-display-update))
+;; first-change-hook is called BEFORE the change is made
+(defun ztl-on-buffer-modification ()
+  (set-buffer-modified-p t)
+  (ztl-modification-state-change))
+(add-hook 'after-save-hook 'ztl-modification-state-change)
+;; this doesn't work for revert, I don't know
+;;(add-hook 'after-revert-hook 'ztl-modification-state-change)
+(add-hook 'first-change-hook 'ztl-on-buffer-modification)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Generalidades
@@ -144,9 +144,9 @@
 ;; Custom files
 ;; Los archivos .bb son templates de SQL
 (setq auto-mode-alist (cons '("bb$" . sql-mode) auto-mode-alist))
-;(autoload 'tt-mode "tt-mode")
-;(setq auto-mode-alist
-;      (append '(("\\.tt$" . tt-mode))  auto-mode-alist ))
+(autoload 'tt-mode "tt-mode")
+(setq auto-mode-alist
+      (append '(("\\.tt$" . tt-mode))  auto-mode-alist ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Multi web mode
@@ -162,28 +162,36 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Template Jade
-;(require 'sws-mode)
-;(require 'jade-mode)    
-;(add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
-;(add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
+(require 'sws-mode)
+(require 'jade-mode)    
+(add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
+(add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Emacs Development Tools
-;(load-file "~/.emacs.d/cedet/common/cedet.el")
-;(global-ede-mode 1)                      ; Enable the Project management system
-;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
-;(global-srecode-minor-mode 1)            ; Enable template insertion menu
+(load-file "~/.emacs.d/cedet/common/cedet.el")
+(global-ede-mode 1)                      ; Enable the Project management system
+(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
+(global-srecode-minor-mode 1)            ; Enable template insertion menu
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ECB
+(add-to-list 'load-path
+             "~/.emacs.d/ecb")
+(load-file "~/.emacs.d/ecb/ecb.el")
+(require 'ecb)
+(require 'ecb-autoloads)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Smart tabs (Autocomplete with TAB)
-;(require 'smart-tab)
+(require 'smart-tab)
 ; comment for use autocomplete by type of file
 ;(global-smart-tab-mode 1)
-;(define-key read-expression-map [(tab)] 'hippie-expand)
-;(defun hippie-unexpand ()
-;  (interactive)
-;  (hippie-expand 0))
-;(define-key read-expression-map [(shift tab)] 'hippie-unexpand)
+(define-key read-expression-map [(tab)] 'hippie-expand)
+(defun hippie-unexpand ()
+  (interactive)
+  (hippie-expand 0))
+(define-key read-expression-map [(shift tab)] 'hippie-unexpand)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Snippet (Autocomplete-code)
@@ -209,39 +217,39 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Match HTML tags
-;(add-hook 'html-mode-hook
-;	    (lambda ()
-;	          (define-key html-mode-map (kbd "<M-left>") 'sgml-skip-tag-backward)
-;		      (define-key html-mode-map (kbd "<M-right>") 'sgml-skip-tag-forward)
-;		          )
-;	      )
+(add-hook 'html-mode-hook
+	    (lambda ()
+	          (define-key html-mode-map (kbd "<M-left>") 'sgml-skip-tag-backward)
+		      (define-key html-mode-map (kbd "<M-right>") 'sgml-skip-tag-forward)
+		          )
+	      )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto-complete
-;(add-to-list 'load-path "~/.emacs.d/auto-complete")
-;(require 'auto-complete-config)
-;(add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/dict")
-;(setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
-;(global-auto-complete-mode t)
-;(setq ac-auto-start 2)
-;(setq ac-ignore-case nil)
+(add-to-list 'load-path "~/.emacs.d/auto-complete")
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/dict")
+(setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
+(global-auto-complete-mode t)
+(setq ac-auto-start 2)
+(setq ac-ignore-case nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Javascript
-;(add-to-list 'load-path "~/.emacs.d/lintnode")
-;(require 'flymake-jslint)
-;(setq lintnode-location "~/.emacs.d/lintnode")
-;(setq lintnode-jslint-excludes (list 'nomen 'undef 'plusplus 'onevar 'white))
-;(add-hook 'js-mode-hook
-;          (lambda ()
-;            (lintnode-hook)))
+;; (add-to-list 'load-path "~/.emacs.d/lintnode")
+;; (require 'flymake-jslint)
+;; (setq lintnode-location "~/.emacs.d/lintnode")
+;; (setq lintnode-jslint-excludes (list 'nomen 'undef 'plusplus 'onevar 'white))
+;; (add-hook 'js-mode-hook
+;;           (lambda ()
+;;             (lintnode-hook)))
 
-;(require 'flymake-cursor)
+;; (require 'flymake-cursor)
 
-;(add-hook 'js-mode-hook
-;          (lambda ()
-;            (imenu-add-menubar-index)
-;            (hs-minor-mode t)))
+;; (add-hook 'js-mode-hook
+;;           (lambda ()
+;;             (imenu-add-menubar-index)
+;;             (hs-minor-mode t)))
 
 ;; Show-hide
 ;(global-set-key (kbd "") 'hs-show-block)
